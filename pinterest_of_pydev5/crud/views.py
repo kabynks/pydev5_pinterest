@@ -1,11 +1,16 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView,
-    CreateView
+    CreateView, UpdateView, DeleteView,
+
 )
-from .forms import PostForm
+from .forms import PostForm, SignUp
 from crud.models import Post
-from django.urls import reverse_lazy
+
 
 
 def homepage(request):
@@ -18,33 +23,35 @@ class PostDetail(DetailView):
     template_name = "crud/detail_post.html/"
     context_object_name = 'post'
 
-def PostCreate(request):
-    form = PostForm()
-    if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(commit=True)
-        return redirect('home')
-    context = {
-        'form': form
-    }
-    return render(request, 'crud/post_create.html', context=context)
+class CreatePost(LoginRequiredMixin,CreateView):
+    model = Post
+    template_name = "crud/post_create.html"
+    success_url = reverse_lazy("home")
+    fields = ["name", "description", "image"]
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-def PostEdit(request, pk):
-    post = Post.objects.get(id=pk)
-    form = PostForm(instance=post)
-    if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save(commit=True)
-        return redirect('home')
-    context = {
-        'form': form
-    }
-    return render(request, 'crud/post_edit.html', context=context)
 
-def PostDelete(request, pk):
-    post = Post.objects.get(id=pk)
-    post.delete()
-    return redirect('home')
+class PostEdit(LoginRequiredMixin,UpdateView):
+    model = Post
+    template_name = "crud/post_edit.html"
+    fields = ["name",
+        "description",
+        "image"
+    ]
+    context_object_name = "post"
+    success_url = reverse_lazy("home")
+
+
+class PostDelete(DeleteView):
+    model = Post
+    template_name = "crud/post_delete.html"
+    success_url = reverse_lazy("home")
+class SignUpView(CreateView):
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("login")
+    form_class = SignUp
+def about_view(request):
+    return render(request, "crud/about.html")
 

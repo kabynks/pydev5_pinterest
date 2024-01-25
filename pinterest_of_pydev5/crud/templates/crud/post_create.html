@@ -1,18 +1,136 @@
 {% extends 'crud/base.html' %}
 
-{% block title %}
 
+{% block title %}
+    Create Post
 {% endblock title %}
 
-
 {% block content %}
+    <style>
+        .form-container {
+            display: flex;
+            margin-top: 50px;
+        }
 
-    <h1>New Post</h1>
+        .form-container .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f2f2;
+        }
 
-    <form  method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit">
-    </form>
+        .form-container .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
 
+        .form-container .form-content {
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .form-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-container input[type="text"],
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+        }
+
+        .form-container input[type="file"] {
+            display: none;
+        }
+
+        .form-container .file-upload {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .form-container .file-upload:hover {
+            background-color: #f2f2f2;
+        }
+
+        .form-container #image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-bottom: 15px;
+        }
+
+        .form-container input[type="submit"] {
+            width: 150px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+    <div class="form-container">
+        <div class="image-container">
+            <img src="#" id="image-preview" alt="Preview" style="display: none;">
+            <div id="image-placeholder" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #888;">Выберите изображение</div>
+        </div>
+
+        <div class="form-content">
+            <h1>New Post</h1>
+
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrfmiddlewaretoken" value="A4NvxnSSeTdQJw2ykBLX2GZ5vf2rgY1guUtLw6ozJX4JnA8p62gRmWWTpencrv4u">
+
+                <label for="id_name">Name:</label>
+                <input type="text" name="name" maxlength="150" required="" id="id_name">
+
+                <label for="id_description">Description:</label>
+                <textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea>
+
+                <label for="id_image">Image:</label>
+                <label class="file-upload">
+                    Upload Image
+                    <input type="file" name="image" accept="image/*" required="" id="id_image">
+                </label>
+
+                <a href="{% url 'home' %}"><input type="submit" value="Create Post"></a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('id_image');
+        const imagePreview = document.getElementById('image-preview');
+        const imagePlaceholder = document.getElementById('image-placeholder');
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
 {% endblock content %}

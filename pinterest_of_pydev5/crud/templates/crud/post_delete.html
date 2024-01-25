@@ -1,17 +1,51 @@
 {% extends 'crud/base.html' %}
 
 {% block title %}
-
-    Delete post
-
-{% endblock title %}
+	Delete Post
+{% endblock %}
 
 {% block content %}
+    <style>
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 50vh;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
 
-    <h1>Delete post</h1>
+    .form-container h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-container input[type="submit"] {
+        width: 150px;
+        margin-left: 150px;
+        padding: 10px;
+        background-color: #e53935;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .form-container input[type="submit"]:hover {
+        background-color: #c62828;
+    }
+</style>
+
+<div class="form-container">
     <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="submit" value="Delete">
+        <input type="hidden" name="csrfmiddlewaretoken" value="N9XIX8whsW7tm9pvb2MQv0OGaW0hOKLeHZDYWR2YX0Ym0dvmXthKPgLu4Vl2ZhOs">
+        <h1>Are you sure you to delete the post?</h1>
+        <input type="submit" value="Delete Post">
     </form>
-
-{% endblock content %}
+</div>
+{% endblock %}

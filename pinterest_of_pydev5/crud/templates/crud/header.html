@@ -14,11 +14,11 @@
 
             {% if user.is_authenticated %}
                 <a href="{% url 'home' %}">Home</a>
-                <a href="">About</a>
+                <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'post_create' %}">Create <i class="fa-solid fa-angle-down"></i></a>
             {% else %}
                 <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'sighup' %}">Sign up </a>
+                <a href="{% url 'signup' %}">Sign up </a>
                 <a href="{% url 'login' %}">Log in</a>
             {% endif %}
         </div>
@@ -30,7 +30,58 @@
         	<div class="icons">
             <i class="fa-solid fa-bell"></i>
             <i class="fa-solid fa-comment-dots"></i>
-            <i class="fa-solid fa-user"></i>
+            <div style="margin-top: 10px" class="user-icon">
+              <i class="fas fa-user"></i>
+                <a href="{% url 'logout' %}"><span class="logout-text">Log out</span></a>
+                <style>
+                    .user-icon {
+                      position: relative;
+                      display: inline-block;
+                      cursor: pointer;
+                      margin-bottom: 10px;
+                    }
+
+                    .logout-text {
+                      position: absolute;
+                      bottom: -40px;
+                      left: -10px;
+                      background-color: #ffffff;
+                      color: #333333;
+                      padding: 10px 15px;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      opacity: 0;
+                      visibility: hidden;
+                      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+                    }
+
+                    .user-icon.active .logout-text {
+                      opacity: 1;
+                      visibility: visible;
+                      bottom: -55px;
+                    }
+
+                    .user-icon.active .logout-text:before {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        border-style: solid;
+                        border-width: 10px;
+                        border-color: transparent transparent #ffffff transparent;
+                    }
+                </style>
+                <script>
+                    // Получаем элементы
+                    const userIcon = document.querySelector(".user-icon");
+
+                    // Добавляем обработчик события клика
+                    userIcon.addEventListener("click", function() {
+                      this.classList.toggle("active");
+                    });
+                </script>
+            </div>
             </div>
         {% endif %}
 

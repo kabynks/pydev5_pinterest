@@ -3,6 +3,7 @@
 {% block title %}
     Post {{ post.name }}
 {% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 {% block content %}
     <!DOCTYPE html>
@@ -67,6 +68,26 @@
     .detail-card .save-button:hover {
       background-color: #c4001a;
     }
+    .card-buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .card-buttons a {
+      display: inline-block;
+      margin-left: 10px;
+      color: #000;
+      font-size: 24px;
+      text-decoration: none;
+    }
+
+    .card-buttons a:hover {
+      color: #e60023;
+    }
+    .detail-card .button {
+        padding-top: 30px;
+    }
+
   </style>
 </head>
 <body>
@@ -76,9 +97,17 @@
       <h2>{{ post.name }}</h2>
       <p>{{ post.description }}</p>
       <p class="username">Posted by: {{ post.author }}</p>
-      <a href="#" class="save-button">Save</a>
-      <a href="{% url 'post_edit' post.pk %}">Edit</a>
-      <a href="{% url 'post_delete' post.pk %}">Delete</a>
+        <p class="username">Published date: {{ post.published_date }}</p>
+        <div class="button">
+             <a href="#" class="save-button">Save</a>
+        </div>
+
+      {% if user.is_authenticated %}
+         <div class="card-buttons">
+             <a href="{% url 'post_edit' post.pk %}"><i class="fas fa-edit"></i></a>
+             <a href="{% url 'post_delete' post.pk %}"><i class="fas fa-trash"></i></a>
+         </div>
+        {% endif %}
     </div>
   </div>
 </body>
