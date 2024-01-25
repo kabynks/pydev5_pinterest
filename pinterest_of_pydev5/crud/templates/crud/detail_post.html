@@ -77,6 +77,8 @@
       <p>{{ post.description }}</p>
       <p class="username">Posted by: {{ post.author }}</p>
       <a href="#" class="save-button">Save</a>
+      <a href="{% url 'post_edit' post.pk %}">Edit</a>
+      <a href="{% url 'post_delete' post.pk %}">Delete</a>
     </div>
   </div>
 </body>
