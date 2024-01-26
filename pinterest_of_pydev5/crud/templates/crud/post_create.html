@@ -6,6 +6,8 @@
 {% endblock title %}
 
 {% block content %}
+
+
     <style>
         .form-container {
             display: flex;
@@ -86,7 +88,7 @@
         }
     </style>
 
-    <div class="form-container">
+        <div class="form-container">
         <div class="image-container">
             <img src="#" id="image-preview" alt="Preview" style="display: none;">
             <div id="image-placeholder" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #888;">Выберите изображение</div>
@@ -96,7 +98,7 @@
             <h1>New Post</h1>
 
             <form method="post" enctype="multipart/form-data">
-                <input type="hidden" name="csrfmiddlewaretoken" value="A4NvxnSSeTdQJw2ykBLX2GZ5vf2rgY1guUtLw6ozJX4JnA8p62gRmWWTpencrv4u">
+                {% csrf_token %}
 
                 <label for="id_name">Name:</label>
                 <input type="text" name="name" maxlength="150" required="" id="id_name">
@@ -114,7 +116,6 @@
             </form>
         </div>
     </div>
-
     <script>
         const imageInput = document.getElementById('id_image');
         const imagePreview = document.getElementById('image-preview');
@@ -133,4 +134,8 @@
             reader.readAsDataURL(file);
         });
     </script>
+
+
+
+
 {% endblock content %}

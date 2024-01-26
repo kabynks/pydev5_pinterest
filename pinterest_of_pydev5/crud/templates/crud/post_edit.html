@@ -124,7 +124,7 @@
 
         <div id="form-container">
             <form method="post" enctype="multipart/form-data">
-                <input type="hidden" name="csrfmiddlewaretoken" value="6HwG0JkweiNBZA8dlfkC2iuCy2oNvXHg0xcWZsQdJmEuDEe47GPwmyrqs1JyGuKu">
+                {% csrf_token %}
 
                 <label for="id_name">Name:</label>
                 <input type="text" name="name" value="{{ post.name }}" maxlength="150" required="" id="id_name">
