@@ -102,11 +102,11 @@
              <a href="#" class="save-button">Save</a>
         </div>
 
-      {% if user.is_authenticated %}
-         <div class="card-buttons">
-             <a href="{% url 'post_edit' post.pk %}"><i class="fas fa-edit"></i></a>
-             <a href="{% url 'post_delete' post.pk %}"><i class="fas fa-trash"></i></a>
-         </div>
+          {% if request.user == post.author %}
+             <div class="card-buttons">
+                 <a href="{% url 'post_edit' post.slug %}"><i class="fas fa-edit"></i></a>
+                 <a href="{% url 'post_delete' post.slug %}"><i class="fas fa-trash"></i></a>
+             </div>
         {% endif %}
     </div>
   </div>

@@ -133,7 +133,7 @@
                 <textarea name="description" cols="40" rows="10" required="" id="id_description">{{ post.description }}</textarea>
 
                 <label for="id_image">Image:</label>
-                Currently: <a href="/media/crud-images/cat.jpg">{{ post.image.url }}</a><br>
+                Currently: <a href="{{ post.image.url }}">{{ post.image.url }}</a><br>
                 <input type="file" name="image" accept="image/*" id="id_image" onchange="handleImageUpload()">
 
                 <a href="{% url 'home' %}"><input type="submit" value="Submit"></a>

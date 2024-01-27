@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from . forms import SearchForm
 
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -54,4 +54,14 @@ class SignUpView(CreateView):
     form_class = SignUp
 def about_view(request):
     return render(request, "crud/about.html")
-
+def search_view(request):
+    form = SearchForm(request.GET)
+    results = []
+    if form.is_valid():
+        q = form.cleaned_data["query"]
+        results = Post.objects.filter(name__icontains=q)
+    context = {
+        "form": form,
+        "results": results
+    }
+    return render(request, "crud/search_post.html", context=context)

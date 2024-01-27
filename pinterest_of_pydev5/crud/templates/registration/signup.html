@@ -8,13 +8,122 @@
 
 
 {% block content %}
+    <style>
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 130vh;
+  }
 
-    <h1>Sign up</h1>
+  .form-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
 
-    <form  method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit">
-    </form>
+  .form-container label {
+    margin-bottom: 10px;
+  }
 
+  .form-container input[type="text"],
+  .form-container input[type="email"],
+  .form-container input[type="password"] {
+    width: 100%;
+    padding: 10px 10px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  .form-container input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+
+  .form-container input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  .form-container .social-login {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .form-container .social-login a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #666;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-container .social-login img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+</style>
+
+<div class="form-container">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+      <label for="id_username">Username:</label>
+      <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username">
+      <span class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+    </p>
+
+    <p>
+      <label for="id_email">Email:</label>
+      <input type="email" name="email" required="" id="id_email">
+    </p>
+
+    <p>
+      <label for="id_password1">Password:</label>
+      <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1">
+      <span class="helptext">
+        <ul>
+          <li>Your password can’t be too similar to your other personal information.</li>
+          <li>Your password must contain at least 8 characters.</li>
+          <li>Your password can’t be a commonly used password.</li>
+          <li>Your password can’t be entirely numeric.</li>
+        </ul>
+      </span>
+    </p>
+
+    <p>
+      <label for="id_password2">Password confirmation:</label>
+      <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2">
+      <span class="helptext">Enter the same password as before, for verification.</span>
+    </p>
+
+    <input type="submit" value="Sign up">
+
+    <div class="social-login">
+      <a href="#">
+        <img src="https://w7.pngwing.com/pngs/326/85/png-transparent-google-logo-google-text-trademark-logo.png" alt="Google" />
+        Log in with Google
+      </a>
+      <a href="#">
+        <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" />
+        Log in with GitHub
+      </a>
+    </div>
+  </form>
+</div>
 {% endblock content %}

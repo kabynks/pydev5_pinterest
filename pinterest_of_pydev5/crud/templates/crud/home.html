@@ -1,5 +1,4 @@
 {% extends 'crud/base.html' %}
-{% load static %}
 {% block title %}
 	Pinterest
 {% endblock %}
@@ -61,7 +60,7 @@
 <div class="container">
     {% for post in posts %}
         <div class="card">
-            <a href="{% url 'detail' post.pk %}">
+            <a href="{% url 'detail' post.slug %}">
                 <img src="{{ post.image.url }}" alt="">
                 <div class="overlay">
                     <button class="save-button"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>

@@ -1,0 +1,76 @@
+{% extends 'crud/base.html' %}
+
+{% block content %}
+    {% if results %}
+
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        width: 100%;
+        columns: 4;
+        column-gap: 15px;
+        padding: 15px;
+    }
+    .card {
+        position: relative;
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    img {
+        width: 100%;
+    }
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        transition: opacity 0.3s ease;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .card:hover .overlay {
+        opacity: 1;
+    }
+    .save-button {
+        color: #fff;
+        font-size: 24px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+    .overlay:hover .save-button {
+        opacity: 1;
+    }
+</style>
+<div class="container">
+    {% for item in results %}
+        <div class="card">
+            <a href="{% url 'detail' item.pk %}">
+                <img src="{{ item.image.url }}" alt="">
+                <div class="overlay">
+                    <button class="save-button"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+
+
+
+    {% endif %}
+{% endblock %}

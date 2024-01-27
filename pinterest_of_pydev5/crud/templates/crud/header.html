@@ -22,10 +22,13 @@
                 <a href="{% url 'login' %}">Log in</a>
             {% endif %}
         </div>
-        <div class="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search">
-        </div>
+        <form method="get" action="{% url 'search' %}">
+            <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input name="query" type="text" placeholder="Search">
+            </div>
+        </form>
+
         {% if user.is_authenticated %}
         	<div class="icons">
             <i class="fa-solid fa-bell"></i>

@@ -4,8 +4,8 @@ from crud.models import Post
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "author"]
-    list_display_links = ["name", "author"]
-    ordering = ['-id']
-    search_fields = ["name", "author"]
+    list_display = ["id", "slug"]
+    list_display_links = ["id", "slug"]
+    ordering = ['-published_date']
+    search_fields = ["id", "slug"]
 admin.site.register(Post, PostAdmin)
