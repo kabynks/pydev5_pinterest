@@ -11,10 +11,8 @@
             <i class="fa-brands fa-pinterest"></i>
         </div>
         <div class="links">
-
             {% if user.is_authenticated %}
                 <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'post_create' %}">Create <i class="fa-solid fa-angle-down"></i></a>
             {% else %}
                 <a href="{% url 'home' %}">Home</a>
@@ -30,61 +28,66 @@
         </form>
 
         {% if user.is_authenticated %}
-        	<div class="icons">
-            <i class="fa-solid fa-bell"></i>
-            <i class="fa-solid fa-comment-dots"></i>
-            <div style="margin-top: 10px" class="user-icon">
-              <i class="fas fa-user"></i>
-                <a href="{% url 'logout' %}"><span class="logout-text">Log out</span></a>
-                <style>
-                    .user-icon {
-                      position: relative;
-                      display: inline-block;
-                      cursor: pointer;
-                      margin-bottom: 10px;
-                    }
+            <div class="icons">
+                <i class="fa-solid fa-bell"></i>
+                <i class="fa-solid fa-comment-dots"></i>
+                <div style="margin-top: 10px" class="user-icon">
+                        {% if user.user_image %}
+                            <img style="margin-bottom: 8px; border-radius: 50%;" src="{{ user.user_image.url }}" alt="User Image" width="40" height="40">
+                             <a href="{% url 'logout' %}"><span class="logout-text">Log out</span></a>
+                        {% else %}
+                            <i class="fas fa-user"></i>
+                            <a href="{% url 'logout' %}"><span class="logout-text">Log out</span></a>
+                        {% endif %}
+                            <style>
+                        .user-icon {
+                          position: relative;
+                          display: inline-block;
+                          cursor: pointer;
+                          margin-bottom: 10px;
+                        }
 
-                    .logout-text {
-                      position: absolute;
-                      bottom: -40px;
-                      left: -10px;
-                      background-color: #ffffff;
-                      color: #333333;
-                      padding: 10px 15px;
-                      border-radius: 8px;
-                      font-size: 14px;
-                      opacity: 0;
-                      visibility: hidden;
-                      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-                    }
+                        .logout-text {
+                          position: absolute;
+                          bottom: -40px;
+                          left: -10px;
+                          background-color: #ffffff;
+                          color: #333333;
+                          padding: 10px 15px;
+                          border-radius: 8px;
+                          font-size: 14px;
+                          opacity: 0;
+                          visibility: hidden;
+                          transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+                        }
 
-                    .user-icon.active .logout-text {
-                      opacity: 1;
-                      visibility: visible;
-                      bottom: -55px;
-                    }
+                        .user-icon.active .logout-text {
+                          opacity: 1;
+                          visibility: visible;
+                          bottom: -55px;
+                        }
 
-                    .user-icon.active .logout-text:before {
-                        content: '';
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        border-style: solid;
-                        border-width: 10px;
-                        border-color: transparent transparent #ffffff transparent;
-                    }
-                </style>
-                <script>
-                    // Получаем элементы
-                    const userIcon = document.querySelector(".user-icon");
+                        .user-icon.active .logout-text:before {
+                            content: '';
+                            position: absolute;
+                            top: 100%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            border-style: solid;
+                            border-width: 10px;
+                            border-color: transparent transparent #ffffff transparent;
+                        }
+                    </style>
+                    <script>
+                        // Получаем элементы
+                        const userIcon = document.querySelector(".user-icon");
 
-                    // Добавляем обработчик события клика
-                    userIcon.addEventListener("click", function() {
-                      this.classList.toggle("active");
-                    });
-                </script>
-            </div>
+                        // Добавляем обработчик события клика
+                        userIcon.addEventListener("click", function() {
+                          this.classList.toggle("active");
+                        });
+                    </script>
+                </div>
             </div>
         {% endif %}
 
@@ -118,7 +121,7 @@
         .links a {
             color: #111;
             text-decoration: none;
-            margin: 0 15px ;
+            margin: 015px ;
             font-weight: 900;
             letter-spacing: 1px;
         }
@@ -153,8 +156,6 @@
             color: #333;
             margin: 0 15px;
             height: 40px;
-
-
         }
     </style>
 </body>

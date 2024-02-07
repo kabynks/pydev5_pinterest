@@ -59,7 +59,7 @@
 <div class="container">
     {% for item in results %}
         <div class="card">
-            <a href="{% url 'detail' item.pk %}">
+            <a href="{% url 'detail' item.slug %}">
                 <img src="{{ item.image.url }}" alt="">
                 <div class="overlay">
                     <button class="save-button"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>

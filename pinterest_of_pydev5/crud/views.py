@@ -1,27 +1,51 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from taggit.models import Tag
+from django.db.models import Count
 from . forms import SearchForm
-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
-    DetailView,
-    CreateView, UpdateView, DeleteView,
-
+    CreateView, UpdateView, DeleteView
 )
-from .forms import PostForm, SignUp
-from crud.models import Post
-
+from .forms import SignUp
+from crud.models import Post, Comment
 
 
 def homepage(request):
+
     context = {
-        "posts": Post.objects.all()
+        "posts": Post.objects.all(),
     }
     return render(request, "crud/home.html", context=context)
-class PostDetail(DetailView):
-    model = Post
-    template_name = "crud/detail_post.html/"
-    context_object_name = 'post'
+
+def post_list(request, tag_slug=None):
+    tag = None
+    object_list = Post.objects.all()
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tag__in=[tag])
+    context = {
+        "tag": tag,
+        "posts": object_list
+    }
+
+    return render(request, "crud/post_list_tags.html", context=context)
+def post_detail(request, slug):
+    post = Post.objects.get(slug=slug)
+    comments = Comment.objects.filter(post=post)
+    post_tags = post.tag.values_list('id', flat=True)
+    similar_posts = Post.objects.filter(tag__in=post_tags) \
+    .exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tag=Count("tag")) \
+    .order_by("-same_tag", )
+    context = {
+        'post': post,
+        'comments': comments,
+        'similar_posts': similar_posts
+    }
+    return render(request, 'crud/detail_post.html', context)
+
+
 
 class CreatePost(LoginRequiredMixin,CreateView):
     model = Post

@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.forms import ModelForm, EmailField
+from accounts.models import User
+
 from django.forms import *
-from .models import Post
+
 
 class PostForm(ModelForm):
     name = CharField(label='Name')
@@ -14,7 +14,7 @@ class SignUp(UserCreationForm):
     email = EmailField()
     class Meta:
         model = User
-        fields = ["username", "email", "password1", "password2"]
+        fields = ["username", "email", "user_image", "password1", "password2"]
 
 
 class SearchForm(Form):

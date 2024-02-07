@@ -3,113 +3,375 @@
 {% block title %}
     Post {{ post.name }}
 {% endblock %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 {% block content %}
-    <!DOCTYPE html>
-<html>
-<head>
-  <title>Detail View - Pinterest Style</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0px;
-    }
+<style>
+  .detail-view {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+  }
 
-    .detail-view {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+  .post-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
 
-    .detail-card {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
-      width: 100%;
-    }
+  .detail-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
 
-    .detail-card img {
-      max-width: 100%;
-      height: 250px;
-      margin-bottom: 20px;
-    }
+  .detail-card img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
 
-    .detail-card h2 {
-      margin-top: 0;
-      font-size: 24px;
-    }
+  .detail-card h2 {
+    margin-top: 0;
+    font-size: 24px;
+  }
 
-    .detail-card p {
-      margin-top: 5px;
-      color: #777;
-    }
+  .detail-card p {
+    margin-top: 5px;
+    color: #777;
+  }
 
-    .detail-card .username {
-      margin-top: 10px;
-      color: #999;
-    }
+  .detail-card .username {
+    margin-top: auto;
+    color: #999;
+  }
 
-    .detail-card .save-button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #e60023;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.3s;
-    }
+  .detail-card .save-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #e60023;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    align-self: flex-end;
+  }
 
-    .detail-card .save-button:hover {
-      background-color: #c4001a;
-    }
-    .card-buttons {
-      display: flex;
-      justify-content: flex-end;
-    }
+  .detail-card .save-button:hover {
+    background-color: #c4001a;
+  }
 
-    .card-buttons a {
-      display: inline-block;
-      margin-left: 10px;
-      color: #000;
-      font-size: 24px;
-      text-decoration: none;
-    }
+  .card-buttons {
+    margin-top: 20px;
+    top: 10px;
+    right: 10px;
+  }
 
-    .card-buttons a:hover {
-      color: #e60023;
-    }
-    .detail-card .button {
-        padding-top: 30px;
-    }
+  .card-buttons a {
+    color: #999;
+    margin-left: 5px;
+  }
 
-  </style>
-</head>
-<body>
-  <div class="detail-view">
+  .comments-container {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .comment-section {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  .comment-section form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .comment-section textarea {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .comment-section button {
+    padding: 5px 10px;
+    background-color: #e60023;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .comment {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .comment .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+
+  .comment .username {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  .comment .date {
+    color: #777;
+  }
+</style>
+
+<div class="detail-view">
+  <div class="post-container">
     <div class="detail-card">
-      <img src="{{ post.image.url }}" alt="Image">
+      <img src="{{ post.image.url }}" alt="Изображение">
       <h2>{{ post.name }}</h2>
       <p>{{ post.description }}</p>
-      <p class="username">Posted by: {{ post.author }}</p>
-        <p class="username">Published date: {{ post.published_date }}</p>
-        <div class="button">
-             <a href="#" class="save-button">Save</a>
-        </div>
-
-          {% if request.user == post.author %}
-             <div class="card-buttons">
-                 <a href="{% url 'post_edit' post.slug %}"><i class="fas fa-edit"></i></a>
-                 <a href="{% url 'post_delete' post.slug %}"><i class="fas fa-trash"></i></a>
-             </div>
+      <p class="username">Author: {{ post.author }}</p>
+      <p class="username">Date published: {{ post.published_date }}</p>
+      <div class="card-buttons">
+        {% if request.user == post.author %}
+          <a href="{% url 'post_edit' post.slug %}"><i class="fas fa-edit"></i></a>
+          <a href="{% url 'post_delete' post.slug %}"><i class="fas fa-trash"></i></a>
         {% endif %}
+      </div>
+      <div style="margin-left:450px;" class="button">
+        <a href="#" class="save-button">Save</a>
+      </div>
     </div>
   </div>
-</body>
-</html>
+
+<div class="comments-container">
+  <div class="comment-section">
+    <div class="user-avatar">
+        {% if user.user_image %}
+      <img src="{{ user.user_image.url }}" alt="User Avatar">
+        {% endif %}
+    </div>
+
+{#    <form action="{% url 'add_comment' post.slug %}" method="post" class="comment-form">#}
+      {% csrf_token %}
+      <textarea name="content" placeholder="Add a comment" class="comment-input"></textarea>
+      <button style="margin-left:10px;" type="submit" class="comment-submit">Post</button>
+    </form>
+  </div>
+  <div class="comments">
+    {% for comment in comments %}
+      <div class="comment">
+        <div class="user-avatar">
+          <img src="{{ comment.author.user_image.url }}" alt="User Avatar">
+        </div>
+        <div class="comment-content">
+          <div class="comment-header">
+            <p class="username">{{ comment.author.username }}</p>
+            <p class="date">{{ comment.date }}</p>
+          </div>
+          <p class="description">{{ comment.content }}</p>
+          <div class="comment-actions">
+            <button id="like-button" class="like-button">Like</button>
+            <button class="reply-button">Reply</button>
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+<h2>Similar posts</h2>
+
+{% for post in similar_posts %}
+    <p>
+        <a href="{% url 'detail' post.slug %}">{{ post.name }}</a>
+    </p>
+ {% empty %}
+    There are no similar posts yet.
+{% endfor %}
+  </div>
+</div>
+     <style>
+         .comments-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.comment-section {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comment-form {
+  flex: 1;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.comment-submit {
+  padding: 8px 16px;
+  background-color: #e60023;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.comment-submit:hover {
+  background-color: #cc001f;
+}
+
+.comments {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.username {
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px;
+}
+
+.date {
+  color: #777;
+}
+
+.description {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.comment-actions {
+  display: flex;
+}
+
+.like-button,
+.reply-button {
+  padding: 4px 8px;
+  background-color: transparent;
+  color: #777;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+}
+
+.like-button::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.like-button:hover::before {
+  opacity: 1;
+}
+
+.like-button::after {
+  content: "👍";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.like-button.clicked::before {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.like-button.clicked::after {
+  opacity: 1;
+}
+
+.reply-button:hover {
+  background-color: #f8f8f8;
+  color:#333;
+}
+     </style>
+ <script>
+     // Получаем все кнопки с классом "like-button"
+const likeButtons = document.querySelectorAll('.like-button');
+
+// Добавляем обработчик события для каждой кнопки
+likeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    button.classList.toggle('clicked');
+  });
+});
+ </script>
 {% endblock content %}
