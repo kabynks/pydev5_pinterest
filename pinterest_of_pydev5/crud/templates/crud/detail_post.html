@@ -8,19 +8,13 @@
 <style>
   .detail-view {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
   }
 
   .post-container {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-
-  .detail-card {
+    position: relative; /* Added for positioning */
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -28,33 +22,35 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    position: relative;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
   }
 
-  .detail-card img {
+  .post-container img {
     width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+    height: 400px;
     object-fit: cover;
     border-radius: 4px;
   }
 
-  .detail-card h2 {
-    margin-top: 0;
-    font-size: 24px;
+  .post-container h2 {
+    margin-top: 10px;
+    font-size: 22px;
+    color: #333;
   }
 
-  .detail-card p {
+  .post-container p {
     margin-top: 5px;
     color: #777;
   }
 
-  .detail-card .username {
-    margin-top: auto;
+  .post-container .username {
     color: #999;
+    margin-top: 5px;
   }
 
-  .detail-card .save-button {
+  .post-container .save-button {
     display: inline-block;
     padding: 10px 20px;
     background-color: #e60023;
@@ -62,316 +58,106 @@
     text-decoration: none;
     border-radius: 4px;
     transition: background-color 0.3s;
-    align-self: flex-end;
+    margin-top: 10px;
   }
 
-  .detail-card .save-button:hover {
+  .post-container .save-button:hover {
     background-color: #c4001a;
   }
 
-  .card-buttons {
-    margin-top: 20px;
-    top: 10px;
-    right: 10px;
+  .post-container .actions {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    gap: 10px;
   }
 
-  .card-buttons a {
+  .post-container .actions a {
     color: #999;
-    margin-left: 5px;
+    transition: color 0.3s;
   }
 
-  .comments-container {
-    flex: 1;
-    height: 100%;
-    overflow-y: auto;
+  .post-container .actions a:hover {
+    color: #e60023;
+  }
+
+  .similar-posts-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
   }
 
-  .comment-section {
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 20px;
-  }
-
-  .comment-section form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .comment-section textarea {
-    margin-bottom: 10px;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-  .comment-section button {
-    padding: 5px 10px;
-    background-color: #e60023;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .comment {
-    background-color: #fff;
+  .similar-post-card {
+    width: 300px;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 20px;
-    display: flex;
-    align-items: flex-start;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    cursor: pointer; /* Added cursor style */
+    transition: transform 0.3s; /* Added animation on hover */
   }
 
-  .comment .user-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+  .similar-post-card:hover {
+    transform: scale(1.05); /* Increase size on hover */
+  }
+
+  .similar-post-card img {
+    width: 100%;
+    height: 200px;
     object-fit: cover;
-    margin-right: 10px;
+    border-radius: 4px;
   }
 
-  .comment .username {
-    font-weight: bold;
+  .similar-post-card h3 {
+    margin-top: 10px;
+    font-size: 18px;
     color: #333;
-    margin-bottom: 5px;
   }
 
-  .comment .date {
+  .similar-post-card p {
+    margin-top: 5px;
     color: #777;
   }
+  
+
 </style>
 
 <div class="detail-view">
+
   <div class="post-container">
-    <div class="detail-card">
-      <img src="{{ post.image.url }}" alt="Изображение">
-      <h2>{{ post.name }}</h2>
-      <p>{{ post.description }}</p>
-      <p class="username">Author: {{ post.author }}</p>
-      <p class="username">Date published: {{ post.published_date }}</p>
-      <div class="card-buttons">
-        {% if request.user == post.author %}
-          <a href="{% url 'post_edit' post.slug %}"><i class="fas fa-edit"></i></a>
-          <a href="{% url 'post_delete' post.slug %}"><i class="fas fa-trash"></i></a>
-        {% endif %}
-      </div>
-      <div style="margin-left:450px;" class="button">
-        <a href="#" class="save-button">Save</a>
-      </div>
+    <img src="{{ post.image.url }}" alt="Изображение">
+    <h2>{{ post.name }}</h2>
+    <p>{{ post.description }}</p>
+    <p class="username">Author: {{ post.author }}</p>
+    <p class="username">Date published: {{ post.published_date }}</p>
+    <div>
+      <a href="#" class="save-button"><i class="fas fa-save"></i> Save</a>
     </div>
+    {% if post.author == request.user %}
+      <div class="actions">
+        <a href="{% url 'post_delete' post.slug %}" class="delete-button"><i class="fas fa-trash-alt"></i></a>
+        <a href="{% url 'post_edit' post.slug %}" class="update-button"><i class="fas fa-edit"></i></a>
+      </div>
+    {% endif %}
   </div>
 
-<div class="comments-container">
-  <div class="comment-section">
-    <div class="user-avatar">
-        {% if user.user_image %}
-      <img src="{{ user.user_image.url }}" alt="User Avatar">
-        {% endif %}
-    </div>
+  <div class="similar-posts-container">
 
-{#    <form action="{% url 'add_comment' post.slug %}" method="post" class="comment-form">#}
-      {% csrf_token %}
-      <textarea name="content" placeholder="Add a comment" class="comment-input"></textarea>
-      <button style="margin-left:10px;" type="submit" class="comment-submit">Post</button>
-    </form>
-  </div>
-  <div class="comments">
-    {% for comment in comments %}
-      <div class="comment">
-        <div class="user-avatar">
-          <img src="{{ comment.author.user_image.url }}" alt="User Avatar">
-        </div>
-        <div class="comment-content">
-          <div class="comment-header">
-            <p class="username">{{ comment.author.username }}</p>
-            <p class="date">{{ comment.date }}</p>
-          </div>
-          <p class="description">{{ comment.content }}</p>
-          <div class="comment-actions">
-            <button id="like-button" class="like-button">Like</button>
-            <button class="reply-button">Reply</button>
-
-          </div>
+    {% for similar_post in similar_posts %}
+      <div class="similar-post-card" onclick="window.location.href = '{% url 'detail' similar_post.slug %}'">
+        <img src="{{ similar_post.image.url }}" alt="Изображение">
+        <h3>{{ similar_post.name }}</h3>
+        <p>{{ similar_post.description }}</p>
+        <p class="username">Author: {{ similar_post.author }}</p>
+        <p class="username">Date published: {{ similar_post.published_date }}</p>
+        <div>
+          <a href="#" class="save-button"><i class="fas fa-save"></i> Save</a>
         </div>
       </div>
     {% endfor %}
-
-<h2>Similar posts</h2>
-
-{% for post in similar_posts %}
-    <p>
-        <a href="{% url 'detail' post.slug %}">{{ post.name }}</a>
-    </p>
- {% empty %}
-    There are no similar posts yet.
-{% endfor %}
   </div>
 </div>
-     <style>
-         .comments-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.comment-section {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: #f8f8f8;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 10px;
-}
-
-.user-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.comment-form {
-  flex: 1;
-}
-
-.comment-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: vertical;
-}
-
-.comment-submit {
-  padding: 8px 16px;
-  background-color: #e60023;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.comment-submit:hover {
-  background-color: #cc001f;
-}
-
-.comments {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-}
-
-.comment {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 20px;
-}
-
-.comment-content {
-  flex: 1;
-}
-
-.comment-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.username {
-  font-weight: bold;
-  color: #333;
-  margin-right: 10px;
-}
-
-.date {
-  color: #777;
-}
-
-.description {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.comment-actions {
-  display: flex;
-}
-
-.like-button,
-.reply-button {
-  padding: 4px 8px;
-  background-color: transparent;
-  color: #777;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 10px;
-  font-weight: bold;
-  position: relative;
-  overflow: hidden;
-}
-
-.like-button::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.like-button:hover::before {
-  opacity: 1;
-}
-
-.like-button::after {
-  content: "👍";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.like-button.clicked::before {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-.like-button.clicked::after {
-  opacity: 1;
-}
-
-.reply-button:hover {
-  background-color: #f8f8f8;
-  color:#333;
-}
-     </style>
- <script>
-     // Получаем все кнопки с классом "like-button"
-const likeButtons = document.querySelectorAll('.like-button');
-
-// Добавляем обработчик события для каждой кнопки
-likeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    button.classList.toggle('clicked');
-  });
-});
- </script>
-{% endblock content %}
+{% endblock %}

@@ -1,14 +1,15 @@
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from taggit.models import Tag
 from django.db.models import Count
-from . forms import SearchForm
-from django.shortcuts import render, get_object_or_404
+from .forms import SearchForm
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView, UpdateView, DeleteView
 )
 from .forms import SignUp
-from crud.models import Post, Comment
+from crud.models import Post
 
 
 def homepage(request):
@@ -32,7 +33,11 @@ def post_list(request, tag_slug=None):
     return render(request, "crud/post_list_tags.html", context=context)
 def post_detail(request, slug):
     post = Post.objects.get(slug=slug)
-    comments = Comment.objects.filter(post=post)
+
+
+
+
+
     post_tags = post.tag.values_list('id', flat=True)
     similar_posts = Post.objects.filter(tag__in=post_tags) \
     .exclude(id=post.id)
@@ -40,8 +45,8 @@ def post_detail(request, slug):
     .order_by("-same_tag", )
     context = {
         'post': post,
-        'comments': comments,
-        'similar_posts': similar_posts
+        'similar_posts': similar_posts,
+
     }
     return render(request, 'crud/detail_post.html', context)
 
@@ -51,7 +56,7 @@ class CreatePost(LoginRequiredMixin,CreateView):
     model = Post
     template_name = "crud/post_create.html"
     success_url = reverse_lazy("home")
-    fields = ["name", "description", "image"]
+    fields = ["name", "description", "image", "tag"]
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -89,3 +94,6 @@ def search_view(request):
         "results": results
     }
     return render(request, "crud/search_post.html", context=context)
+
+
+

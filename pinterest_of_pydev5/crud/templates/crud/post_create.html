@@ -1,13 +1,10 @@
 {% extends 'crud/base.html' %}
 
-
 {% block title %}
     Create Post
 {% endblock title %}
 
 {% block content %}
-
-
     <style>
         .form-container {
             display: flex;
@@ -86,12 +83,34 @@
         .form-container input[type="submit"]:hover {
             background-color: #45a049;
         }
+
+        .form-container .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .form-container .tags-container .tag {
+            background-color: #f2f2f2;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-container .tags-container .tag .remove-tag {
+            margin-left: 5px;
+            cursor: pointer;
+        }
     </style>
 
-        <div class="form-container">
+    <div class="form-container">
         <div class="image-container">
-            <img src="#" id="image-preview" alt="Preview" style="display: none;">
-            <div id="image-placeholder" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #888;">Выберите изображение</div>
+           <img src="#" id="image-preview" alt="Preview">
+            <div id="image-placeholder">
+                
+            </div>
         </div>
 
         <div class="form-content">
@@ -107,21 +126,49 @@
                 <textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea>
 
                 <label for="id_image">Image:</label>
-                <label class="file-upload">
-                    Upload Image
-                    <input type="file" name="image" accept="image/*" required="" id="id_image">
-                </label>
+                <label for="id_image" class="file-upload">
+                Upload Image
+                <input type="file" name="image" accept="image/*" required="" id="id_image">
+            </label>
+                
+                            
+                <label for="id_tag">Tags:</label>
+                <input type="text" name="tag" required="" id="id_tag">
+                <span class="helptext">A comma-separated list of tags.</span>
+                
+                <div class="tags-container" id="tags-container"></div>
 
                 <a href="{% url 'home' %}"><input type="submit" value="Create Post"></a>
             </form>
         </div>
     </div>
+<script>
+    const imageInput = document.getElementById('id_image');
+    const imagePreview = document.getElementById('image-preview');
+    const imagePlaceholder = document.getElementById('image-placeholder');
+
+    imageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+            imagePlaceholder.style.display = 'none';
+        };
+
+        reader.readAsDataURL(file);
+    });
+</script>
     <script>
         const imageInput = document.getElementById('id_image');
         const imagePreview = document.getElementById('image-preview');
         const imagePlaceholder = document.getElementById('image-placeholder');
+        const tagsContainer = document.getElementById('tags-container');
+        const tagInput = document.getElementById('id_tag');
 
         imageInput.addEventListener('change', function(event) {
+```html
             const file = event.target.files[0];
             const reader = new FileReader();
 
@@ -133,9 +180,33 @@
 
             reader.readAsDataURL(file);
         });
+
+        function addTag(tag) {
+            const tagElement = document.createElement('div');
+            tagElement.className = 'tag';
+            tagElement.textContent = tag;
+
+            const removeTagButton = document.createElement('span');
+            removeTagButton.className = 'remove-tag';
+            removeTagButton.textContent = 'x';
+            removeTagButton.addEventListener('click', function() {
+                tagsContainer.removeChild(tagElement);
+            });
+
+            tagElement.appendChild(removeTagButton);
+            tagsContainer.appendChild(tagElement);
+        }
+
+        tagInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && tagInput.value.trim() !== '') {
+                const tags = tagInput.value.split(',');
+
+                tags.forEach(function(tag) {
+                    addTag(tag.trim());
+                });
+
+                tagInput.value = '';
+            }
+        });
     </script>
-
-
-
-
 {% endblock content %}

@@ -17,7 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-# Application definition
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'jazzmin',
@@ -27,13 +27,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     #local
     'crud',
     'accounts',
     #third party
     'django_cleanup',
     'autoslug',
-    'taggit'
+    'taggit',
+
 ]
 JAZZMIN_SETTINGS = {
     "show_ui_builder": True
@@ -117,6 +120,7 @@ AUTH_USER_MODEL = "accounts.User"
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 
 MEDIA_URL = "/media/"

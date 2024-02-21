@@ -1,9 +1,13 @@
+from django.contrib.sitemaps import Sitemap
+from django.urls import reverse
+
 from accounts.models import User
 from django.db import models
 from autoslug import AutoSlugField
 
-from django.utils import timezone
+
 from taggit.managers import TaggableManager
+
 class Post(models.Model):
     tag = TaggableManager()
 
@@ -21,13 +25,16 @@ class Post(models.Model):
     def __str__(self):
         return self.slug
 
+    def get_absolute_url(self):
+        return reverse('detail', args=[str(self.slug)])
+
+class PostSitemap(Sitemap):
+    changefreq = "daily"
+    priority = 0.9
+
+    def items(self):
+        return Post.objects.all()
+    def lastmod(self, obj):
+        return obj.published_date
 
 
-class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    author = models.ForeignKey(User, on_delete=models.PROTECT)
-    content = models.TextField()
-    created_date = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return self.content

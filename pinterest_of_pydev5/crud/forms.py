@@ -4,6 +4,8 @@ from accounts.models import User
 from django.forms import *
 
 
+
+
 class PostForm(ModelForm):
     name = CharField(label='Name')
     description = CharField(label='Description', widget=Textarea)
@@ -18,4 +20,4 @@ class SignUp(UserCreationForm):
 
 
 class SearchForm(Form):
-    query = CharField(label='Search')
+    query = CharField(label='Search', widget=Textarea)

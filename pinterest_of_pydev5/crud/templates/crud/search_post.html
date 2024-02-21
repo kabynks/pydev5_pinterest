@@ -2,20 +2,20 @@
 
 {% block content %}
     {% if results %}
-
-
-    <style>
+<style>
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
+
     .container {
         width: 100%;
         columns: 4;
         column-gap: 15px;
         padding: 15px;
     }
+
     .card {
         position: relative;
         width: 100%;
@@ -23,9 +23,11 @@
         border-radius: 10px;
         overflow: hidden;
     }
+
     img {
         width: 100%;
     }
+
     .overlay {
         position: absolute;
         top: 0;
@@ -41,9 +43,11 @@
         padding: 10px;
         box-sizing: border-box;
     }
+
     .card:hover .overlay {
         opacity: 1;
     }
+
     .save-button {
         color: #fff;
         font-size: 24px;
@@ -52,19 +56,55 @@
         cursor: pointer;
         transition: opacity 0.3s ease;
     }
+
     .overlay:hover .save-button {
         opacity: 1;
     }
+
+    .tags {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        z-index: 1;
+    }
+
+    .card:hover .tags {
+        display: block;
+    }
+
+    .tags a {
+        color: #999;
+        text-decoration: none;
+    }
+
+    .tags a:hover {
+        text-decoration: underline;
+    }
 </style>
+
 <div class="container">
     {% for item in results %}
         <div class="card">
             <a href="{% url 'detail' item.slug %}">
                 <img src="{{ item.image.url }}" alt="">
                 <div class="overlay">
-                    <button class="save-button"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                    
                 </div>
             </a>
+            <p class="tags">
+                    {% if item.tag %}
+                        {% for tag in item.tag.all %}
+                            <a href="{% url 'post_list_by_tag' tag.slug %}" target="_blank">#{{ tag }}</a>
+                        {% endfor %}
+                    {% endif %}
+                </p>
         </div>
     {% endfor %}
 </div>

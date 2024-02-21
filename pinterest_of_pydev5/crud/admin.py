@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from crud.models import Post, Comment
+from crud.models import Post
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -10,7 +10,4 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ["id", "slug"]
 admin.site.register(Post, PostAdmin)
 
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ["id", "author", "created_date"]
-    list_display_links = ["id", "author", "created_date"]
-admin.site.register(Comment, CommentAdmin)
+
