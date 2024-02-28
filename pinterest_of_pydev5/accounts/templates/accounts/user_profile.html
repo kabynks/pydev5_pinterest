@@ -21,36 +21,40 @@
             <div class="profile-info">
 
                 <h2 class="profile-username">{{ user.username }}</h2>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if profile in profile.follows.all %}
+                            <button name="unfollow" class="profile-edit-button">UnFollow</button>
+                        {% else %}
+                            <button name="follow" class="profile-edit-button">Follow</button>
+                        {% endif %}
+                    </form>
 
 
-                    <button class="profile-edit-button">Follow</button>
 
             </div>
         </div>
         <div class="profile-stats">
             <div class="profile-stat">
-                <span class="profile-stat-count">{{ profile_data.posts_count }}</span>
+                <span class="profile-stat-count">{{ posts_count }}</span>
                 <span class="profile-stat-label">Posts</span>
             </div>
             <div class="profile-stat">
-                <span class="profile-stat-count">{{ profile_data.followers_count }}</span>
+                <span class="profile-stat-count">{{ profile.follows.count }}</span>
                 <span class="profile-stat-label">Followers</span>
             </div>
-            <div class="profile-stat">
-                <span class="profile-stat-count">{{ profile_data.following_count }}</span>
-                <span class="profile-stat-label">Following</span>
-            </div>
+
         </div>
         <div class="profile-bio">
-            <h3 class="profile-name">{{ profile_data.name }}</h3>
-            <p class="profile-description">{{ profile_data.bio }}</p>
-            <p class="profile-birthdate">{{ profile_data.birth_date }}</p>
+            <h3 class="profile-name">{{ profile.name }}</h3>
+            <p class="profile-description">{{ profile.bio }}</p>
+            <p class="profile-birthdate">{{ profile.birth_date }}</p>
         </div>
         <div class="profile-gallery">
             {% for post in posts %}
                 <div class="profile-gallery-item">
                     <div class="profile-image-wrapper">
-                        <img class="profile-gallery-image" src="{{ post.image.url }}" alt="Post Image">
+                        <a href="{% url 'detail' post.id %}"><img class="profile-gallery-image" src="{{ post.image.url }}" alt="Post Image"></a>
                     </div>
                 </div>
             {% endfor %}

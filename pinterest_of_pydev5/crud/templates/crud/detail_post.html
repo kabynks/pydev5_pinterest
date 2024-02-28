@@ -121,33 +121,114 @@
     margin-top: 5px;
     color: #777;
   }
-  
+
 
 </style>
 
 <div class="detail-view">
 
   <div class="post-container">
-    <img src="{{ post.image.url }}" alt="Изображение">
-    <h2>{{ post.name }}</h2>
-    <p>{{ post.description }}</p>
-    <p class="username">Author: {{ post.author }}</p>
-    <p class="username">Date published: {{ post.published_date }}</p>
-    <div>
-      <a href="#" class="save-button"><i class="fas fa-save"></i> Save</a>
-    </div>
-    {% if post.author == request.user %}
-      <div class="actions">
-        <a href="{% url 'post_delete' post.slug %}" class="delete-button"><i class="fas fa-trash-alt"></i></a>
-        <a href="{% url 'post_edit' post.slug %}" class="update-button"><i class="fas fa-edit"></i></a>
-      </div>
-    {% endif %}
+  <img src="{{ post.image.url }}" alt="Изображение">
+  <h2>{{ post.name }}</h2>
+  <p>{{ post.description }}</p>
+  <p class="username">Author: <a href="{% url 'userprofile' post.author_id %}">{{ post.author }}</a></p>
+  <p class="username">Date published: {{ post.published_date }}</p>
+
+
+  <div class="actions">
+    <form action="{% url 'like_view' id=post.id %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% if user in post.likes.all %}
+        <button type="submit" name="post_id" class="like-button active"><i class="fas fa-thumbs-up"></i></button>
+      {% else %}
+        <button type="submit" name="post_id" class="like-button"><i class="fas fa-thumbs-up"></i></button>
+      {% endif %}
+      <strong>{{ post.likes.all.count }}</strong>
+    </form>
+
+
+      <style>
+
+
+.post-container .action {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.post-container .action a {
+  color: #999;
+  transition: color 0.3s;
+}
+
+.post-container .action a:hover {
+  color: #e60023;
+}
+
+.post-container .like-button,
+.post-container .dislike-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid #ccc;
+  color: #999;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.post-container .like-button.active {
+  background-color: #e60023;
+  color: #fff;
+  border-color: #e60023;
+}
+
+.post-container .like-button:hover,
+.post-container .dislike-button:hover {
+  background-color: #eee;
+}
+
+.post-container .like-button i,
+.post-container .dislike-button i {
+  font-size: 20px;
+}
+
+
+      </style>
   </div>
+
+  <div>
+    <a href="#" class="save-button"><i class="fas fa-save"></i> Save</a>
+  </div>
+{% if post.author == request.user %}
+    <div class="action">
+      <a href="{% url 'post_delete' post.id %}" class="delete-button"><i class="fas fa-trash-alt"></i></a>
+      <a href="{% url 'post_edit' post.id %}" class="update-button"><i class="fas fa-edit"></i></a>
+    </div>
+  {% endif %}
+      <style>
+          .action {
+              margin-left: 500px;
+          }
+        </style>
+
+</div>
+
+
+
+
+
+
 
   <div class="similar-posts-container">
 
     {% for similar_post in similar_posts %}
-      <div class="similar-post-card" onclick="window.location.href = '{% url 'detail' similar_post.slug %}'">
+      <div class="similar-post-card" onclick="window.location.href = '{% url 'detail' similar_post.id %}'">
         <img src="{{ similar_post.image.url }}" alt="Изображение">
         <h3>{{ similar_post.name }}</h3>
         <p>{{ similar_post.description }}</p>

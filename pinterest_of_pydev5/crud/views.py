@@ -2,14 +2,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from taggit.models import Tag
 from django.db.models import Count
+
+from django.http import HttpResponseRedirect
 from .forms import SearchForm
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     CreateView, UpdateView, DeleteView
 )
 from .forms import SignUp
-from crud.models import Post
+from crud.models import Post, LikePost
 
 
 def homepage(request):
@@ -19,11 +21,11 @@ def homepage(request):
     }
     return render(request, "crud/home.html", context=context)
 
-def post_list(request, tag_slug=None):
+def post_list(request, tag_id=None):
     tag = None
     object_list = Post.objects.all()
-    if tag_slug:
-        tag = get_object_or_404(Tag, slug=tag_slug)
+    if tag_id:
+        tag = get_object_or_404(Tag, id=tag_id)
         object_list = object_list.filter(tag__in=[tag])
     context = {
         "tag": tag,
@@ -31,13 +33,8 @@ def post_list(request, tag_slug=None):
     }
 
     return render(request, "crud/post_list_tags.html", context=context)
-def post_detail(request, slug):
-    post = Post.objects.get(slug=slug)
-
-
-
-
-
+def post_detail(request, id):
+    post = Post.objects.get(id=id)
     post_tags = post.tag.values_list('id', flat=True)
     similar_posts = Post.objects.filter(tag__in=post_tags) \
     .exclude(id=post.id)
@@ -49,6 +46,28 @@ def post_detail(request, slug):
 
     }
     return render(request, 'crud/detail_post.html', context)
+
+from django.urls import reverse
+
+def like_view(request, id):
+    user = request.user
+    if request.method == 'POST':
+        post_obj = Post.objects.get(id=id)
+        if user in post_obj.likes.all():
+            post_obj.likes.remove(user)
+        else:
+            post_obj.likes.add(user)
+
+        like,created = LikePost.objects.get_or_create(user=user, post=post_obj)
+
+        if not created:
+            if like.value == 'Like':
+                like.value = 'Unlike'
+            else:
+                like.value = 'Like'
+        like.save()
+    detail_url = reverse('detail', args=[id])
+    return redirect(detail_url)
 
 
 

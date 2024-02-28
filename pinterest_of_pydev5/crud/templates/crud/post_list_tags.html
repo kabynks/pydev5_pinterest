@@ -173,7 +173,7 @@
 
     {% for post in posts %}
         <div class="card">
-            <a href="{% url 'detail' post.slug %}">
+            <a href="{% url 'detail' post.id %}">
                 <img src="{{ post.image.url }}" alt="">
                 <div class="overlay">
                   
@@ -181,7 +181,7 @@
                 <p class="tags">
                     {% if post.tag %}
                         {% for tag in post.tag.all %}
-                            <a href="{% url 'post_list_by_tag' tag.slug %}" target="_blank">#{{ tag }}</a>
+                            <a href="{% url 'post_list_by_tag' tag.id %}" target="_blank">#{{ tag }}</a>
                         {% endfor %}
                     {% endif %}
                 </p>
