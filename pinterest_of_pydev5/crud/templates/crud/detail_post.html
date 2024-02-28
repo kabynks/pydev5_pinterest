@@ -136,6 +136,7 @@
 
 
   <div class="actions">
+    {% if request.user.is_authenticated %}
     <form action="{% url 'like_view' id=post.id %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       {% if user in post.likes.all %}
@@ -145,6 +146,7 @@
       {% endif %}
       <strong>{{ post.likes.all.count }}</strong>
     </form>
+  {% endif %}
 
 
       <style>
