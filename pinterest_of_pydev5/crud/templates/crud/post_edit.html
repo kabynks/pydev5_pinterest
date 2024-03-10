@@ -1,146 +1,147 @@
 {% extends 'crud/base.html' %}
 
-{% block title %}
-    Edit Post
-{% endblock title %}
+    {% block title %}
+        Edit Post
+    {% endblock title %}
 
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: auto;
-        }
-        #container {
-            display: flex;
-            width: 90%;
-            margin: 0;
+        {% if request.user == user.author %}
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        height: 100vh;
+                        overflow: auto;
+                    }
+                    #container {
+                        display: flex;
+                        width: 90%;
+                        margin: 0;
 
 
-        }
+                    }
 
-        #image-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }
+                    #image-container {
+                        flex: 1;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        background-color: #f2f2f2;
+                        padding: 20px;
+                    }
 
-        #image-container img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 5px;
-            object-fit: contain;
-        }
+                    #image-container img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        border-radius: 5px;
+                        object-fit: contain;
+                    }
 
-        #form-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            background-color: #f2f2f2;
-            padding: 30px;
-            width: 100%; /* Растянуть контейнер на всю ширину */
-            box-sizing: border-box;
-            margin-right: 0;
-            margin-left: 0;
-        }
+                    #form-container {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        background-color: #f2f2f2;
+                        padding: 30px;
+                        width: 100%; /* Растянуть контейнер на всю ширину */
+                        box-sizing: border-box;
+                        margin-right: 0;
+                        margin-left: 0;
+                    }
 
-        #form-container form {
-            max-width: 100%;
-            width: 100%;
-        }
+                    #form-container form {
+                        max-width: 100%;
+                        width: 100%;
+                    }
 
-        #form-container label {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #333;
-        }
+                    #form-container label {
+                        font-size: 16px;
+                        margin-bottom: 10px;
+                        color: #333;
+                    }
 
-        #form-container input[type="text"],
-        #form-container textarea {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+                    #form-container input[type="text"],
+                    #form-container textarea {
+                        width: 100%;
+                        padding: 10px;
+                        font-size: 16px;
+                        border-radius: 5px;
+                        border: 1px solid #ccc;
+                    }
 
-        #form-container input[type="file"] {
-            width: 100%;
-            margin-bottom: 10px;
-        }
+                    #form-container input[type="file"] {
+                        width: 100%;
+                        margin-bottom: 10px;
+                    }
 
-        #form-container input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #e53935;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            margin-top: 10px;
-        }
+                    #form-container input[type="submit"] {
+                        width: 100%;
+                        padding: 10px;
+                        background-color: #e53935;
+                        color: #fff;
+                        border: none;
+                        cursor: pointer;
+                        font-size: 16px;
+                        border-radius: 5px;
+                        transition: background-color 0.3s;
+                        margin-top: 10px;
+                    }
 
-        #form-container input[type="submit"]:hover {
-            background-color: #c62828;
-        }
+                    #form-container input[type="submit"]:hover {
+                        background-color: #c62828;
+                    }
 
-        #preview-image {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-    </style>
-    <script>
-        function handleImageUpload() {
-            var preview = document.getElementById("preview-image");
-            var fileInput = document.getElementById("id_image");
-            var file = fileInput.files[0];
-            var reader = new FileReader();
+                    #preview-image {
+                        max-width: 100%;
+                        height: auto;
+                        margin-bottom: 10px;
+                    }
+                </style>
+                <script>
+                    function handleImageUpload() {
+                        var preview = document.getElementById("preview-image");
+                        var fileInput = document.getElementById("id_image");
+                        var file = fileInput.files[0];
+                        var reader = new FileReader();
 
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                        }
 
-            reader.readAsDataURL(file);
-        }
-    </script>
-</head>
-<body>
-    <div style="margin-left: 60px; margin-top: 20px; margin-bottom: 60px; border-radius: 5px" id="container">
-        <div id="image-container">
-            <img src="{{ post.image.url }}" alt="Cat Image" id="preview-image">
-        </div>
+                        reader.readAsDataURL(file);
+                    }
+                </script>
+            </head>
+            <body>
+                <div style="margin-left: 60px; margin-top: 20px; margin-bottom: 60px; border-radius: 5px" id="container">
+                    <div id="image-container">
+                        <img src="{{ post.image.url }}" alt="Cat Image" id="preview-image">
+                    </div>
 
-        <div id="form-container">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+                    <div id="form-container">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
 
-                <label for="id_name">Name:</label>
-                <input type="text" name="name" value="{{ post.name }}" maxlength="150" required="" id="id_name">
+                            <label for="id_name">Name:</label>
+                            <input type="text" name="name" value="{{ post.name }}" maxlength="150" required="" id="id_name">
 
-                <label for="id_description">Description:</label>
-                <textarea name="description" cols="40" rows="10" required="" id="id_description">{{ post.description }}</textarea>
+                            <label for="id_description">Description:</label>
+                            <textarea name="description" cols="40" rows="10" required="" id="id_description">{{ post.description }}</textarea>
 
-                <label for="id_image">Image:</label>
-                Currently: <a href="{{ post.image.url }}">{{ post.image.url }}</a><br>
-                <input type="file" name="image" accept="image/*" id="id_image" onchange="handleImageUpload()">
+                            <label for="id_image">Image:</label>
+                            Currently: <a href="{{ post.image.url }}">{{ post.image.url }}</a><br>
+                            <input type="file" name="image" accept="image/*" id="id_image" onchange="handleImageUpload()">
 
-                <a href="{% url 'home' %}"><input type="submit" value="Submit"></a>
-            </form>
-        </div>
-    </div>
-</body>
-</html>
-
-{% endblock content %}
+                            <a href="{% url 'home' %}"><input type="submit" value="Submit"></a>
+                        </form>
+                    </div>
+                </div>
+            </body>
+            </html>
+    {% endif %}
+    {% endblock content %}

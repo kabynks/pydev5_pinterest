@@ -12,8 +12,9 @@ def userprofile(request, id):
         user = User.objects.get(id=id)
     except User.DoesNotExist:
         return HttpResponse('404 NOT FOUND')
+    user = User.objects.get(id=id)
     posts = Post.objects.filter(author=user)
-    profile = ProfileModel.objects.get(user=user)
+    profile = ProfileModel.objects.get_or_create(user=user)
     posts_count = posts.count()
     if request.method == 'POST':
         current_user_profile = ProfileModel.objects.get(user=user)
@@ -26,7 +27,7 @@ def userprofile(request, id):
         current_user_profile.save()
 
     context = {
-        "user": request.user,
+        "user": user,
         "posts": posts,
         "profile": profile,
         "posts_count": posts_count

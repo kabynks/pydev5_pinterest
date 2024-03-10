@@ -12,8 +12,9 @@ from django.views.generic import (
 )
 from .forms import SignUp
 from crud.models import Post, LikePost
+from django.views.decorators.cache import cache_page
 
-
+@cache_page(20)
 def homepage(request):
 
     context = {
